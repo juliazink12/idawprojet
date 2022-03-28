@@ -23,33 +23,38 @@
         </thead>
     </table>
  <script>
-
+    
     $(document).ready(function() {
+        // ajaxGETAliments(); 
         $('#example').DataTable( {
             "processing": true,
             //"serverSide": true,
             "ajax": {
                 "url": "../backend/aliments.php",
                 "type": "POST",
-                "dataSrc": function ( json ){return json;}
+                "pageLength": 20,
+                "dataSrc": function ( json ){alert(json);
+                    return json;
+                }
             },
             "columns": [
                 { "data": "nom" }
             ]
         } );
     } );
-    function ajaxGETUsers(){  
+    function ajaxGETAliments(){  
         $.ajax({
             url:"../backend/aliments.php",
             method:"GET"})
-        .done(function (data) {        
+        .done(function (data) {    
+            alert(data);    
             return data;
         })
         .fail(function (error) {
             alert("Query was unsuccessful. Info: " + JSON.stringify(error));
         })
         .always(function () {
-            //alert("Query finished.");                
+            alert("Query finished.");                
         });            
     }
     function ajaxAddUser(user){
@@ -105,5 +110,17 @@
             //alert("Query finished.");
         });
     }
+    function addAlimentIntoHTMLTable(aliment){
+            $("#exemple").append(`
+            <tr><td>${user['LASTNAME']}</td>
+            <td>${user['FIRSTNAME']}</td>
+            <td>${user['BIRTHDAY']}</td>
+            <td>${user['LIKES']}</td>
+            <td>${user['REMARKS']}</td>
+            <td>
+                <button class="button delete" onclick = "deleteUser(this)">Delete</button>
+                <button class="button " value = "Add" onclick = "EditMode(this)">Edit</button>
+            </td></tr>`);
+    }    
  </script>   
 </body>
