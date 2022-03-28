@@ -2,7 +2,7 @@
     hey
 -->
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset='utf-8'>
@@ -10,9 +10,15 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
     <title>Index</title>
     <link rel="shortcut icon" href="">
+    <!-- DataTables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.5/sp-2.0.0/datatables.min.css"/>
-    
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.5/sp-2.0.0/datatables.min.js"></script>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"></script>
+    <!-- Bootstrap Autocomplete Plugin -->
+    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
+    
 </head>
 <body>
     <table id="example" class="display" style="width:100%">
@@ -22,10 +28,24 @@
             </tr>
         </thead>
     </table>
- <script>
-    
+    <form id="addConsoForm" action="" onsubmit="onFormSubmit();">
+        <label for="inputTypeID" class="col-sm-2 col-form-label">Type ID</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="inputTypeID">
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Submit</button>
+    </form>
+ <script> 
+    function onFormSubmit() {
+            event.preventDefault();
+            // TODO variables from click
+            var set_type = 1;
+            var id_type = 0;
+            var type = { SET_TYPE: set_type, ID_TYPE: id_type };
+            ajaxSendIDType(type);
+        }
     $(document).ready(function() {
-        // ajaxGETAliments(); 
+        //ajaxGETAliments(); 
         $('#example').DataTable( {
             "processing": true,
             //"serverSide": true,
@@ -33,7 +53,7 @@
                 "url": "../backend/aliments.php",
                 "type": "POST",
                 "pageLength": 20,
-                "dataSrc": function ( json ){alert(json);
+                "dataSrc": function ( json ){
                     return json;
                 }
             },
@@ -42,6 +62,7 @@
             ]
         } );
     } );
+    
     function ajaxGETAliments(){  
         $.ajax({
             url:"../backend/aliments.php",
@@ -57,9 +78,9 @@
             alert("Query finished.");                
         });            
     }
-    function ajaxAddUser(user){
+    function ajaxAddConso(conso){
         $.ajax({
-            url: "users.php",
+            url: "consommation.php",
             method: "POST",
             dataType: "json",
             data: user
@@ -74,7 +95,7 @@
         });
                 
     }
-    function ajaxRemoveUser(id){
+    function ajaxRemoveConso(id){
         $.ajax({
             url: "users.php" + "?id=" + id ,
             method: "DELETE",
@@ -90,7 +111,7 @@
         });
                     
     }
-    function ajaxEditUser(user,id) {
+    function ajaxEditConso(user,id) {
         $.ajax({
             url: "users.php" + "?id=" + id + 
             "&lastname=" + user['LASTNAME']+
@@ -110,13 +131,26 @@
             //alert("Query finished.");
         });
     }
-    function addAlimentIntoHTMLTable(aliment){
+    function ajaxSendIDType(type){
+        $.ajax({
+            url: "../backend/aliments.php" + 
+            "?set_type=" + type['SET_TYPE'] +
+            "&id_type=" + type['ID_TYPE'] ,
+            method: "GET",
+        })
+        .done(function (data) {
+            console.log(data);
+        })         
+        .fail(function (error) {
+            alert("Query was unsuccessful. Info : " + JSON.stringify(error));
+        })
+        .always(function () {
+            //alert("Query finished.");
+        });        
+    }
+    function addConsoIntoHTMLTable(conso){
             $("#exemple").append(`
-            <tr><td>${user['LASTNAME']}</td>
-            <td>${user['FIRSTNAME']}</td>
-            <td>${user['BIRTHDAY']}</td>
-            <td>${user['LIKES']}</td>
-            <td>${user['REMARKS']}</td>
+            <tr><td>${conso['aliment_n']}</td>
             <td>
                 <button class="button delete" onclick = "deleteUser(this)">Delete</button>
                 <button class="button " value = "Add" onclick = "EditMode(this)">Edit</button>
