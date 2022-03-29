@@ -18,25 +18,35 @@
     <title>Index</title>   
 </head>
 <body>
-    <table id="example" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>Aliment</th>
+    <table cellspacing="5" cellpadding="5" border="0">
+            <tbody><tr>
+                <button class="button " value = "d" onclick = "SendTimeSpan(this)">Aujourd'hui</button>
+                <button class="button " value = "w" onclick = "SendTimeSpan(this)">Semaine</button>
+                <button class="button " value = "a" onclick = "SendTimeSpan(this)">Tout</button>
             </tr>
-        </thead>
-    </table>
-    <div class="row">  
-        <div class="col-md-12 text-left">   
-            <div> Sélectionnez un type</div>     
-            <input class="typeahead form-control" style="width:300px;" type="text">  
+        <table id="example" class="display" style="width:100%">
+
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="row">  
+            <div class="col-md-12 text-left">   
+                <div> Sélectionnez un type</div>     
+                <input class="typeahead form-control" style="width:300px;" type="text">  
+            </div>  
         </div>  
-    </div>  
-
+    </table>
 <script> 
-
+    // _span : variable globale contenant l'intervalle de temps sur lequel 
+    // sélectionner les consommations
+    var _span = 'a';
     function onFormSubmit() {
         event.preventDefault();
-        // TODO variables from click
+        // Test de sélection du type d'aliment
         var set_type = 1;
         var id_type = 0;
         var type = { SET_TYPE: set_type, ID_TYPE: id_type };
@@ -74,18 +84,24 @@
             //"serverSide": true,
             "ajax": {
                 "url": "../backend/consommation.php",
-                "type": "GET",
-                "pageLength": 20,
-                "dataSrc": function ( json ){
-                    return json;
+                "dataSrc":"",
+                "type": 'POST',
+                "data": {
+                    "span": _span
                 }
             },
             "columns": [
-                { "data": "nom" }
+                { data : "nom" },
+                { data : "date"}
             ]
         })
+
     } );
-    
+
+    function SendTimeSpan(btn){
+        _span = $(btn).val();
+        $('#example').DataTable().ajax.reload();               
+    }
     function ajaxGETAliments(){  
         $.ajax({
             url:"../backend/aliments.php" + "?type=eau",
@@ -154,6 +170,17 @@
     //         //alert("Query finished.");
     //     });
     // }
+    /*
+    *** Test de sélection du type d'aliment *** 
+    */
+    // function onFormSubmit() {
+    //     event.preventDefault();
+    //     
+    //     var set_type = 1;
+    //     var id_type = 0;
+    //     var type = { SET_TYPE: set_type, ID_TYPE: id_type };
+    //     ajaxSendIDType(type);
+    // }
     // function ajaxSendIDType(type){
     //     $.ajax({
     //         url: "../backend/aliments.php" + 
@@ -170,14 +197,6 @@
     //     .always(function () {
     //         //alert("Query finished.");
     //     });        
-    // }
-    // function addConsoIntoHTMLTable(conso){
-    //         $("#exemple").append(`
-    //         <tr><td>${conso['aliment_n']}</td>
-    //         <td>
-    //             <button class="button delete" onclick = "deleteUser(this)">Delete</button>
-    //             <button class="button " value = "Add" onclick = "EditMode(this)">Edit</button>
-    //         </td></tr>`);
-    // }    
+    // }   
     </script>   
 </body>
