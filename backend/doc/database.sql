@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 29, 2022 at 09:38 AM
+-- Generation Time: Mar 29, 2022 at 03:19 PM
 -- Server version: 5.7.11
 -- PHP Version: 7.0.3
 
@@ -3240,7 +3240,7 @@ CREATE TABLE `consommation` (
   `QUANTITE` float DEFAULT NULL,
   `DATE` datetime DEFAULT NULL,
   `LOGIN` varchar(200) DEFAULT NULL,
-  `ID_ALI` int(20) DEFAULT NULL
+  `ID_ALI` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -3248,7 +3248,11 @@ CREATE TABLE `consommation` (
 --
 
 INSERT INTO `consommation` (`ID_CONSO`, `QUANTITE`, `DATE`, `LOGIN`, `ID_ALI`) VALUES
-(1, 200, '2022-03-01 00:00:00', 'test@test.com', 24999);
+(1, 200, '2022-03-01 00:00:00', 'test@test.com', 24999),
+(3, 100, '2022-02-09 00:00:00', 'test@test.com', 25601),
+(4, 100, '2022-01-09 00:00:00', 'test@test.com', 25601),
+(5, 100, '2021-12-09 00:00:00', 'test@test.com', 25625),
+(6, 200, '2022-03-29 00:00:00', 'test@test.com', 25601);
 
 -- --------------------------------------------------------
 
@@ -6593,8 +6597,7 @@ ALTER TABLE `aliment`
 -- Indexes for table `consommation`
 --
 ALTER TABLE `consommation`
-  ADD PRIMARY KEY (`ID_CONSO`),
-  ADD UNIQUE KEY `ID_ALI` (`ID_ALI`);
+  ADD PRIMARY KEY (`ID_CONSO`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -6609,7 +6612,7 @@ ALTER TABLE `aliment`
 -- AUTO_INCREMENT for table `consommation`
 --
 ALTER TABLE `consommation`
-  MODIFY `ID_CONSO` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID_CONSO` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
