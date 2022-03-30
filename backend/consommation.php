@@ -7,31 +7,31 @@ function get_conso($conn){
     if(isset($_POST['span'])){
         $span = $_POST['span'];
         switch($span){
-            case 'd':
+            case 'day':
                 //today
                 $sql = "SELECT nom,date FROM aliment INNER JOIN consommation ON aliment.id_ali = consommation.id_ali
                         WHERE date >= DATE_ADD(CURDATE(), INTERVAL 0 DAY) 
                         and   date <= CURDATE()";
                 break;
-            case 'w':
+            case 'week':
             //past week
                 $sql = "SELECT nom,date FROM aliment INNER JOIN consommation ON aliment.id_ali = consommation.id_ali
                         WHERE date >= DATE_ADD(CURDATE(), INTERVAL -7 DAY) 
                         and   date <= CURDATE()";
                 break;
-            case 'm':
+            case 'month':
             //past month
                 $sql = "SELECT nom,date FROM aliment INNER JOIN consommation ON aliment.id_ali = consommation.id_ali
                         WHERE date >= DATE_ADD(CURDATE(), INTERVAL -31 DAY) 
                         and   date <= CURDATE()";
                 break;
-            case 'y';
+            case 'year';
             //past year 
                 $sql = "SELECT nom,date FROM aliment INNER JOIN consommation ON aliment.id_ali = consommation.id_ali
                         WHERE date >= DATE_ADD(CURDATE(), INTERVAL -1 YEAR) 
                         and   date <= CURDATE()";
                 break;
-            case 'a';
+            case 'all';
                 $sql =  "SELECT nom,date FROM aliment INNER JOIN consommation ON aliment.id_ali = consommation.id_ali";
             //all
                 break;

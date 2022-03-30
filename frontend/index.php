@@ -13,17 +13,24 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
     <!-- Import Datatables after JQuery-->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>  
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.5/date-1.1.2/r-2.2.9/sc-2.0.5/sb-1.3.2/sp-2.0.0/sl-1.3.4/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/date-1.1.2/r-2.2.9/sc-2.0.5/sb-1.3.2/sp-2.0.0/sl-1.3.4/datatables.min.js"></script>
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script> 
+    <script  src="https://cdn.datatables.net/plug-ins/1.11.5/dataRender/datetime.js"></script>
+     
     <title>Index</title>   
 </head>
 <body>
     <table cellspacing="5" cellpadding="5" border="0">
-            <tbody><tr>
-                <button class="button " value = "d" onclick = "SendTimeSpan(this)">Aujourd'hui</button>
-                <button class="button " value = "w" onclick = "SendTimeSpan(this)">Semaine</button>
-                <button class="button " value = "a" onclick = "SendTimeSpan(this)">Tout</button>
-            </tr>
+        <tbody><tr>
+            <td>Minimum date:</td>
+            <td><input type="text" id="min" name="min"></td>
+        </tr>
+        <tr>
+            <td>Maximum date:</td>
+            <td><input type="text" id="max" name="max"></td>
+        </tr>
+    </tbody>
         <table id="example" class="display" style="width:100%">
 
             <thead>
@@ -40,10 +47,31 @@
             </div>  
         </div>  
     </table>
-<script> 
-    // _span : variable globale contenant l'intervalle de temps sur lequel 
-    // sélectionner les consommations
-    var _span = 'a';
+<script>
+
+    var minDate, maxDate;
+ 
+    // Custom filtering function which will search data in column four between two values
+    $.fn.dataTable.ext.search.push(
+        function( settings, data, dataIndex ) {
+            var min = minDate.val();
+            var max = maxDate.val();
+            var date = new Date( data[1] );
+            
+    
+            if (
+                ( min === null && max === null ) ||
+                ( min === null && date <= max ) ||
+                ( min <= date   && max === null ) ||
+                ( min <= date   && date <= max )
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
+    // _span : globall
+    var _span = 'all';
     function onFormSubmit() {
         event.preventDefault();
         // Test de sélection du type d'aliment
@@ -53,33 +81,29 @@
         ajaxSendIDType(type);
     }
     $(document).ready(function() {
-        //ajaxGETAliments(); 
-        // $('.advancedAutoComplete').autoComplete({
-        //     resolver: 'custom',
-        //     events: {
-        //         search: function (qry, callback) {
-        //             // let's do a custom ajax call
-        //             $.ajax(
-        //                 '../backend/aliments.php',
-        //                 {
-        //                     data: { 'type': qry}
-        //                 }
-        //             ).done(function (res) {
-        //                 callback(res.results)
-        //             });
-        //         }
-        //     }
-        // });
+        //Select the type of food item
         $('input.typeahead').typeahead({  
             source:  function (query, process) {  
             return $.get('../backend/aliments.php', { type: query }, function (data) {  
                     console.log(data);  
                     data = $.parseJSON(data);  
                     return process(data);  
-                });  
-            }  
-        });  
-        $('#example').DataTable( {
+                }); 
+            }, 
+            updater: function(item) {
+            // updater is run after user click
+                console.log(item);
+            } 
+        });
+        // Create date inputs
+        minDate = new DateTime($('#min'), {
+            format: 'MMMM Do YYYY'
+        });
+        maxDate = new DateTime($('#max'), {
+            format: 'MMMM Do YYYY'
+        });
+        //Define 'Consommation' table
+        var table_conso = $('#example').DataTable( {
             "processing": true,
             //"serverSide": true,
             "ajax": {
@@ -94,8 +118,13 @@
                 { data : "nom" },
                 { data : "date"}
             ]
-        })
+        });
+        // Refilter the table
+        $('#min, #max').on('change', function () {
+            table_conso.draw();
+        }); 
 
+        
     } );
 
     function SendTimeSpan(btn){
