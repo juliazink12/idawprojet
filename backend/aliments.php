@@ -10,14 +10,14 @@ function get_aliments($conn){
   }
 function get_aliments_type($conn){
   // récupère les aliments d'un type choisi
-  $stmt = $conn->prepare("SELECT DISTINCT aliment.type FROM aliment WHERE aliment.id_type= :id_type");
+  $stmt = $conn->prepare("SELECT DISTINCT aliment.nom FROM aliment WHERE aliment.id_type= :id_type");
   $id_type = $_GET['id_type'];
   echo($id_type);
   $stmt->bindParam(':id_type', $id_type);
   $stmt->execute();
   $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-function get_aliments_type_bs($conn){
+function get_type($conn){
   // récupère les aliments d'un type choisi
   $stmt = $conn->prepare("SELECT DISTINCT aliment.type FROM aliment where type LIKE CONCAT('%', :typename, '%')");
   $type =  $_GET['type'];
@@ -31,7 +31,7 @@ function get_aliments_type_bs($conn){
 
 if(isset($_GET['type'])){
   $type = $_GET['type'];
-  $result =  get_aliments_type_bs($conn);
+  $result =  get_type($conn);
 }
 
 
