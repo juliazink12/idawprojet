@@ -8,13 +8,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="">
     <!-- Import jquery before bootstrap-typehead -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
     <!-- Import Datatables after JQuery-->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.css"/>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.js"></script>
-    <script  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>  
-    <!-- <script src="js/dataTables.altEditor.free.js"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/2.0.0/css/searchPanes.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css"/>
+    
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/searchpanes/2.0.0/js/dataTables.searchPanes.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+    <!-- Import altEditorFree before momentjs and after Datatable-->
+    <script src="js/dataTables.altEditor.free.js">
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+        
+    
      
     <title>Historique</title>   
 </head>
@@ -31,7 +47,7 @@
     </tbody>
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Historique des Repas</h6>
         </div>
         <div class="card-body">
             <button type="button" id="add_button" data-toggle="modal" data-target="#consoModal" class="btn btn-info btn-lg">Ajouter</button>
@@ -129,14 +145,7 @@
             }
         );
         var _span = 'all';
-        // function onFormSubmit() {
-        //     event.preventDefault();
-        //     // Test de sélection du type d'aliment
-        //     var set_type = 1;
-        //     var id_type = 0;
-        //     var type = { SET_TYPE: set_type, ID_TYPE: id_type };
-        //     ajaxSendIDType(type);
-        // }
+
         $(document).ready(function() {
             // // Add Consommation
             // $('#add_button').click(function(){
@@ -174,34 +183,47 @@
                 format: 'MMMM Do YYYY'
             });
             //Define 'Consommation' table
+            var columnDefs = [
+                    { data : "nom" },
+                    { data : "date"},
+                    { data : "quantite"}
+                ]
             var table_conso = $('#table-conso').DataTable( {
                 "processing": true,
                 //"serverSide": true,
                 "ajax": {
-                    "url": "../backend/consommation.php",
-                    "dataSrc":"",
-                    "type": 'POST',
-                    "data": {
+                    url: "../backend/consommation.php",
+                    dataSrc:"",
+                    type: 'POST',
+                    data: {
                         "span": _span
                     }
                 },
-                "columns": [
-                    { data : "nom" },
-                    { data : "date"},
-                    { data : "quantite"},
+                columns: columnDefs,
+                dom: 'Bfrtip',        // Needs button container
+                select: 'single',
+                responsive: true,
+                altEditor: true,     // Enable altEditor
+                buttons: [
                     {
-                        data: null,
-                        className: "dt-center editor-edit",
-                        defaultContent: '<i class="fa fa-pencil"/>',
-                        orderable: false
+                        text: 'Add',
+                        name: 'add'        // do not change name
                     },
                     {
-                        data: null,
-                        className: "dt-center editor-delete",
-                        defaultContent: '<i class="fa fa-trash"/>',
-                        orderable: false
+                        extend: 'selected', // Bind to Selected row
+                        text: 'Edit',
+                        name: 'edit'        // do not change name
+                    },
+                    {
+                        extend: 'selected', // Bind to Selected row
+                        text: 'Delete',
+                        name: 'delete'      // do not change name
+                    },
+                    {
+                        text: 'Refresh',
+                        name: 'refresh'      // do not change name
                     }
-                ]
+                ],
             });
             // Refilter the table
             $('#min, #max').on('change', function () {
