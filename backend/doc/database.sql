@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 30, 2022 at 11:57 PM
+-- Generation Time: Apr 01, 2022 at 10:29 PM
 -- Server version: 5.7.11
 -- PHP Version: 7.0.3
 
@@ -12859,8 +12859,8 @@ INSERT INTO `nutrition` (`ID_NUTRI`, `NOM`) VALUES
 CREATE TABLE `recommandation` (
   `ID_REC` int(11) NOT NULL,
   `ID_NUTRI` int(20) NOT NULL,
-  `AMOUNT` float NOT NULL,
-  `AGE_RANGE` varchar(200) NOT NULL,
+  `QUANTITE` float NOT NULL,
+  `TRANCHE_AGE` varchar(200) NOT NULL,
   `SEXE` varchar(1) NOT NULL DEFAULT 'N'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -12868,7 +12868,7 @@ CREATE TABLE `recommandation` (
 -- Dumping data for table `recommandation`
 --
 
-INSERT INTO `recommandation` (`ID_REC`, `ID_NUTRI`, `AMOUNT`, `AGE_RANGE`, `SEXE`) VALUES
+INSERT INTO `recommandation` (`ID_REC`, `ID_NUTRI`, `QUANTITE`, `TRANCHE_AGE`, `SEXE`) VALUES
 (1, 1, 275, '>=4', 'N'),
 (2, 1, 150, '<=3', 'N'),
 (3, 2, 13, '<=3', 'N'),
