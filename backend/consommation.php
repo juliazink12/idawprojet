@@ -43,6 +43,11 @@ function get_conso($conn){
     return $result;
 }
 function add_conso($conn){
+    $sql = "INSERT INTO  consommation (quantite,date,login,id_ali) VALUES (:quantite,:date,:login,:id_ali);";;
+    $stmt->bindValue(':quantite', $type, PDO::PARAM_FLOAT);
+    $stmt->bindValue(':date', $type, PDO::PARAM_STR);
+    $stmt->bindValue(':login', $type, PDO::PARAM_STR);
+    $stmt->bindValue(':id_ali', $type, PDO::PARAM_INT);
     $result = $conn;
     return $result;
 }

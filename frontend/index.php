@@ -1,6 +1,9 @@
 <!--
     hey
 -->
+<?php
+    require_once('bootstrap/template_header.php');
+?>
 <!doctype html>
 <html lang="en">
 
@@ -9,17 +12,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="">
     <!-- Import jquery before bootstrap-typehead -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"> 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script> -->
     <!-- Import Datatables after JQuery-->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.css"/>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.css" />
-    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.js" ></script>
-    <script  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script> 
-    <script  src="https://cdn.datatables.net/plug-ins/1.11.5/dataRender/datetime.js"></script>
-    <script src="js/dataTables.altEditor.free.js" ></script>
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.5/date-1.1.2/r-2.2.9/sp-2.0.0/sl-1.3.4/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.5/date-1.1.2/r-2.2.9/sp-2.0.0/sl-1.3.4/datatables.min.js"></script>-->
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>  
+    <!-- <script src="js/dataTables.altEditor.free.js" ></script> -->
      
     <title>Index</title>   
 </head>
@@ -76,7 +75,28 @@
             </div>
         </div>
     </div>
-<div id="consoModal" class="modal fade">
+     <input type="submit" id="submitButton"/>
+ <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<div class="modal fade" id="consoModal">
  <div class="modal-dialog">
   <form method="post" id="conso_form" enctype="multipart/form-data">
    <div class="modal-content">
@@ -85,7 +105,6 @@
      <h4 class="modal-title">Ajouter une consommation</h4>
     </div>
     <div class="modal-body">
-    <!-- C'est ici qu'il faut insérer le typehead de sélection des aliments,ainsi que la logique de restriction par type-->
      <label>Nom de la consommation</label>
      <input type="text" name="nom" id="nom" class="form-control" />
      <br />
@@ -140,26 +159,33 @@
     //     ajaxSendIDType(type);
     // }
     $(document).ready(function() {
-        // Add Consommation
-        $('#add_button').click(function(){
-        $('#conso_form')[0].reset();
-        $('.modal-title').text("Ajouter une Consommation");
-        $('#action').val("Add");
-        $('#operation').val("Add");
-        });
-        //Select the type of food item
-        $('input.typeahead').typeahead({  
-            source:  function (query, process) {  
-            return $.get('../backend/aliments.php', { type: query }, function (data) {  
-                    console.log(data);  
-                    data = $.parseJSON(data);  
-                    return process(data);  
-                }); 
-            }, 
-            updater: function(item) {
-            // updater is run after user click
-                console.log(item);
-            } 
+        // // Add Consommation
+        // $('#add_button').click(function(){
+        // $('#conso_form')[0].reset();
+        // $('.modal-title').text("Ajouter une Consommation");
+        // $('#action').val("Add");
+        // $('#operation').val("Add");
+        // });
+        // //Select the type of food item
+        // $('input.typeahead').typeahead({  
+        //     source:  function (query, process) {  
+        //     return $.get('../backend/aliments.php', { type: query }, function (data) {  
+        //             console.log(data);  
+        //             data = $.parseJSON(data);  
+        //             return process(data);  
+        //         }); 
+        //     }, 
+        //     updater: function(item) {
+        //     // updater is run after user click
+        //         console.log(item);
+        //     } 
+        // });
+        //Test modal
+
+        $(document).ready(function(){
+            $("#submitButton").click(function(){
+                $("#myModal").modal();
+            });
         });
         // Create date inputs
         minDate = new DateTime($('#min'), {
@@ -374,5 +400,6 @@
     //     });        
     // }   
     </script>   
-</body>
-</html>
+<?php
+    require_once('bootstrap/template_footer.php');
+?>
