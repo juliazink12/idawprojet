@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="">
     <!-- Import jquery before bootstrap-typehead -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
     <!-- Import Datatables after JQuery-->
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.js"></script> -->
@@ -26,8 +26,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/searchpanes/2.0.0/js/dataTables.searchPanes.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
-    <!-- Import altEditorFree before momentjs and after Datatable-->
-    <script src="js/dataTables.altEditor.free.js">
+    <!-- <script src="js/dataTables.altEditor.free.js"> -->
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
         
     
@@ -50,7 +49,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Historique des Repas</h6>
         </div>
         <div class="card-body">
-            <button type="button" id="add_button" data-toggle="modal" data-target="#consoModal" class="btn btn-info btn-lg">Ajouter</button>
+            <button type="button" id="add-button" data-toggle="modal" data-target="#consoModal" class="btn btn-info btn-lg">Ajouter</button>
             <div class="table-responsive">
                 <table class="table table-bordered" id="table-conso" width="100%" cellspacing="0">
                     <thead>
@@ -92,7 +91,7 @@
             </div>
         </div>
     </div>
-
+    <!-- Consommation Modal-->
     <div class="modal fade" id="consoModal">
     <div class="modal-dialog">
     <form method="post" id="conso_form" enctype="multipart/form-data">
@@ -113,9 +112,7 @@
         <br />
         </div>
         <div class="modal-footer">
-        <input type="hidden" name="id_conso" id="id_conso" />
-        <input type="hidden" name="operation" id="operation" />
-        <input type="submit" name="action" id="action" class="btn btn-success" value="Add" />
+        <input type="submit" name="action" id="add-conso" class="btn btn-success" value="Add" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
         </div>
     </div>
@@ -147,158 +144,112 @@
         var _span = 'all';
 
         $(document).ready(function() {
-            // // Add Consommation
-            // $('#add_button').click(function(){
-            // $('#conso_form')[0].reset();
-            // $('.modal-title').text("Ajouter une Consommation");
-            // $('#action').val("Add");
-            // $('#operation').val("Add");
-            // });
-            // //Select the type of food item
-            // $('input.typeahead').typeahead({  
-            //     source:  function (query, process) {  
-            //     return $.get('../backend/aliments.php', { type: query }, function (data) {  
-            //             console.log(data);  
-            //             data = $.parseJSON(data);  
-            //             return process(data);  
-            //         }); 
-            //     }, 
-            //     updater: function(item) {
-            //     // updater is run after user click
-            //         console.log(item);
-            //     } 
-            // });
-            //Test modal
+            $("#add_button").click(function(){
+                $('#conso_form')[0].reset();
+                $('.modal-title').text("Ajouter une Consommation");
+                $('#action').val("Add");
+                $('#operation').val("Add");
+            });
 
-            $(document).ready(function(){
-                $("#submitButton").click(function(){
-                    $("#myModal").modal();
-                });
-            });
-            // Create date inputs
-            minDate = new DateTime($('#min'), {
-                format: 'MMMM Do YYYY'
-            });
-            maxDate = new DateTime($('#max'), {
-                format: 'MMMM Do YYYY'
-            });
-            //Define 'Consommation' table
-            var columnDefs = [
-                    { data : "nom" },
-                    { data : "date"},
-                    { data : "quantite"}
-                ]
             var table_conso = $('#table-conso').DataTable( {
                 "processing": true,
                 //"serverSide": true,
                 "ajax": {
-                    url: "../backend/consommation.php",
-                    dataSrc:"",
-                    type: 'POST',
-                    data: {
+                    "url": "../backend/consommation.php",
+                    "dataSrc":"",
+                    "type": 'POST',
+                    "data": {
                         "span": _span
                     }
                 },
-                columns: columnDefs,
-                dom: 'Bfrtip',        // Needs button container
-                select: 'single',
-                responsive: true,
-                altEditor: true,     // Enable altEditor
-                buttons: [
+                "columns": [
+                    { data : "nom" },
+                    { data : "date"},
+                    { data : "quantite"},
                     {
-                        text: 'Add',
-                        name: 'add'        // do not change name
+                        defaultContent: '<a href="#" class="btn btn-edit btn-circle btn-lg"><i class="fas fa-edit"></i>',
+                        orderable: false
                     },
                     {
-                        extend: 'selected', // Bind to Selected row
-                        text: 'Edit',
-                        name: 'edit'        // do not change name
-                    },
-                    {
-                        extend: 'selected', // Bind to Selected row
-                        text: 'Delete',
-                        name: 'delete'      // do not change name
-                    },
-                    {
-                        text: 'Refresh',
-                        name: 'refresh'      // do not change name
+                        defaultContent: '<a href="#" class="btn btn-delete btn-circle btn-lg"><i class="fas fa-trash"></i></a>',
+                        orderable: false
                     }
-                ],
+                ]
             });
             // Refilter the table
             $('#min, #max').on('change', function () {
                 table_conso.draw();
-            }); 
-
-            
-        } );
-        $(document).on('submit', '#conso_form', function(event){
-        event.preventDefault();
-        var Nom = $('#nom').val();
-        var Date = $('#date').val();
-        var Quantite = $('#quantite').val();
-        if(Nom != '' && Date != '' && Quantite != '')
-        {
-        $.ajax({
-            url:"../backend/consommation.php",
-            method:'POST',
-            data:new FormData(this),
-            contentType:false,
-            processData:false,
-            success:function(data)
-            {
-            alert(data);
-            $('#conso_form')[0].reset();
-            $('#consoModal').modal('hide');
-            table_conso.ajax.reload();
-            }
-        });
-        }
-        else
-        {
-        alert("Les trois champs sont requis.");
-        }
-        });
+            });    
         
-        $(document).on('click', '.update', function(){
-        var conso_id = $(this).attr("id");
-        $.ajax({
-        url:"../backend/consommation.php",
-        method:"PUT",
-        data:{id_conso:id_conso},
-        dataType:"json",
-        success:function(data)
-        {
-            $('#consoModal').modal('show');
-            $('#nom').val(data.nom);
-            $('#date').val(data.date);
-            $('#quantite').val(data.quantite);
-            $('.modal-title').text("Editer la Consommation");
-            $('#id_conso').val(id_conso);
-            $('#action').val("Edit");
-            $('#operation').val("Edit");
-        }
-        })
-        });
-        $(document).on('click', '.delete', function(){
-        var id_conso = $(this).attr("id");
-        if(confirm("Are you sure you want to delete this?"))
-        {
-        $.ajax({
-            url:"../backend/consommation.php",
-            method:"DELETE",
-            data:{id_conso:id_conso},
-            success:function(data)
+            $(document).on('submit', '#conso_form', function(event){
+            event.preventDefault();
+            var Nom = $('#nom').val();
+            var Date = $('#date').val();
+            var Quantite = $('#quantite').val();
+            if(Nom != '' && Date != '' && Quantite != '')
             {
-            alert(data);
-            table_conso.ajax.reload();
+            $.ajax({
+                url:"../backend/consommation.php" + "?op=add",
+                method:'POST',
+                data:new FormData(this),
+                contentType:false,
+                processData:false,
+                success:function(data)
+                {
+                alert(data);
+                $('#conso_form')[0].reset();
+                $('#consoModal').modal('hide');
+                table_conso.ajax.reload();
+                }
+            });
             }
-        });
-        }
-        else
-        {
-        return false; 
-        }
+            else
+            {
+            alert("Les trois champs sont requis.");
+            }
+            });
+            
+            $(document).on('click', '.btn-edit', function(){
+            var data = table_conso.row( $(this).parents('tr') ).data();
+            var id_conso = data["id_conso"];
+            $.ajax({
+                url:"../backend/consommation.php"+"?op=edit",
+                method:"POST",
+                data:{id_conso:id_conso},
+                dataType:"json",
+                success:function(data)
+                {
+                    $('#consoModal').modal('show');
+                    $('#nom').val(data["nom"]);
+                    $('#date').val(data["date"]);
+                    $('#quantite').val(data["quantite"]);
+                    $('.modal-title').text("Editer la Consommation");
+                    $('#id_conso').val(id_conso);
+                    $('#action').val("Edit");
+                    $('#operation').val("Edit");
+                }
+                })
+            });
+            $(document).on('click', '.btn-delete', function(){
+            var id_conso = table_conso.row( $(this).parents('tr') ).data()["id_conso"];
+            if(confirm("Souhaitez-vous effacer cette consommation?"))
+            {
+            $.ajax({
+                url:"../backend/consommation.php"+ "?op=delete",
+                method:"POST",
+                data:{id_conso:id_conso},
+                success:function(data)
+                {
+                //alert(data);
+                table_conso.ajax.reload();
+                }
+            });
+            }
+            else
+            {
+            return false; 
+            }
+            });
         });
     </script> 
 <script  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>  
