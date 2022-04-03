@@ -275,6 +275,7 @@
                 success:function(data)
                 {
                 //alert(data);
+                $('#add-conso').val("Add");
                 table_conso.ajax.reload();
                 }
             });
