@@ -109,7 +109,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Catégories</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Calories</h6>
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
@@ -118,13 +118,13 @@
                                     </div>
                                     <div class="mt-4 text-center small">
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> fruits/légumes
+                                            <i class="fas fa-circle text-primary"></i> Consommées
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> protéines
+                                            <i class="fas fa-circle text-success"></i> Restantes
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> féculents
+                                            <i class="fas fa-circle text-info"></i> Excès
                                         </span>
                                     </div>
                                 </div>
@@ -266,7 +266,71 @@
                         set_lip_prog();
                         set_prot_prog();
                     });
-
+                    function set_distrib(){
+                        $.ajax({
+                            url:"../backend/statistiques.php" + "?type_stat=glucides_pct" ,
+                            method:'GET',
+                            data:"",
+                            dataType: 'json',
+                            success:function(data)
+                            {
+                                // var gl = data["0"]["glucides"];
+                                // alert(gl);
+                                var total_qte_glu = 0 ;
+                                var total_rec_glu = 0;
+                                data.forEach(item => {
+                                    total_qte_glu  += parseFloat(item["Quantite(g)"]);
+                                    total_rec_glu += parseFloat(item["Qte Rec"]);
+                                })
+                                var pct = (100 * total_qte_glu) / total_rec_glu ;
+                                pct =pct>100?100:pct;
+                                $(".glucides-span").text(pct+'%');
+                                $(".glucides-bar").attr('aria-valuenow', pct).css('width', pct+'%');
+                            }
+                        });
+                        $.ajax({
+                            url:"../backend/statistiques.php" + "?type_stat=glucides_pct" ,
+                            method:'GET',
+                            data:"",
+                            dataType: 'json',
+                            success:function(data)
+                            {
+                                // var gl = data["0"]["glucides"];
+                                // alert(gl);
+                                var total_qte_glu = 0 ;
+                                var total_rec_glu = 0;
+                                data.forEach(item => {
+                                    total_qte_glu  += parseFloat(item["Quantite(g)"]);
+                                    total_rec_glu += parseFloat(item["Qte Rec"]);
+                                })
+                                var pct = (100 * total_qte_glu) / total_rec_glu ;
+                                pct =pct>100?100:pct;
+                                $(".glucides-span").text(pct+'%');
+                                $(".glucides-bar").attr('aria-valuenow', pct).css('width', pct+'%');
+                            }
+                        });
+                        $.ajax({
+                            url:"../backend/statistiques.php" + "?type_stat=glucides_pct" ,
+                            method:'GET',
+                            data:"",
+                            dataType: 'json',
+                            success:function(data)
+                            {
+                                // var gl = data["0"]["glucides"];
+                                // alert(gl);
+                                var total_qte_glu = 0 ;
+                                var total_rec_glu = 0;
+                                data.forEach(item => {
+                                    total_qte_glu  += parseFloat(item["Quantite(g)"]);
+                                    total_rec_glu += parseFloat(item["Qte Rec"]);
+                                })
+                                var pct = (100 * total_qte_glu) / total_rec_glu ;
+                                pct =pct>100?100:pct;
+                                $(".glucides-span").text(pct+'%');
+                                $(".glucides-bar").attr('aria-valuenow', pct).css('width', pct+'%');
+                            }
+                        });      
+                    }
                     function set_glu_prog(){
                         $.ajax({
                             url:"../backend/statistiques.php" + "?type_stat=glucides_pct" ,
@@ -337,3 +401,20 @@
                         });
                     }
                 </script>
+              
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/chart-area-demo.js"></script>
+    <script src="js/demo/chart-pie-demo.js"></script>  
