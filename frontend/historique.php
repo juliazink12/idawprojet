@@ -113,7 +113,7 @@
         <br />
         </div>
         <div class="modal-footer">
-        <input type="submit" name="action" id="add-conso" class="btn btn-success" value="Add" />
+        <input type="submit" name="action" id="add-conso" class="btn btn-success" value="Valider" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
         <div id="modal-query-result"></div>
         </div>
@@ -148,11 +148,13 @@
         var _formMode = 'add';
         var _idConso = 0;
         $(document).ready(function() {
-
-            $("#add_button").click(function(){
+            event.preventDefault();
+            $(document).on('click', '#add-button', function(){
+                event.preventDefault();
+                alert("Clicked");
                 $('#conso_form')[0].reset();
                 $('.modal-title').text("Ajouter une Consommation");
-                $('#add-conso').val("Add");
+                _formMode = "add";
             });
 
             var table_conso = $('#table-conso').DataTable( {
@@ -192,8 +194,7 @@
             var Quantite = $('#quantite').val();
             var mode = "add";
             if(Nom != '' && Date != '' && Quantite != ''){
-                var ac_val = $('#add-conso').val();
-                if(ac_val ="Update"){
+                if(_formMode == "update"){
                     $.ajax({
                         url:"../backend/consommation.php" + "?op=update" + "&id_conso=" + _idConso,
                         method:'POST',
@@ -213,7 +214,7 @@
                     $.ajax({
                         url:"../backend/consommation.php" + "?op=add",
                         method:'POST',
-                        data:formData,
+                        data:new FormData(this),
                         contentType:false,
                         processData:false,
                         success:function(data)
@@ -252,6 +253,7 @@
             }
             } );
             $(document).on('click', '.btn-edit', function(){
+                event.preventDefault();
                 var data1 = table_conso.row( $(this).parents('tr') ).data();
                 _idConso = data1["id_conso"];
                 alert(Date(data1["date"]));
@@ -260,30 +262,28 @@
                 $('#modal-date').val(data1["date"]);
                 $('#modal-quantite').val(data1["quantite"]);
                 $('.modal-title').text("Editer la Consommation");
-                $('#operation').val("Edit");
-                $('#add-conso').val("Update");
-                _formMode = "edit";
+                _formMode = "update";
                 });
             $(document).on('click', '.btn-delete', function(){
-            id_conso = table_conso.row( $(this).parents('tr') ).data()["id_conso"];
-            if(confirm("Souhaitez-vous effacer cette consommation?"))
-            {
-            $.ajax({
-                url:"../backend/consommation.php"+ "?op=delete",
-                method:"POST",
-                data:{id_conso:id_conso},
-                success:function(data)
+                event.preventDefault();
+                id_conso = table_conso.row( $(this).parents('tr') ).data()["id_conso"];
+                if(confirm("Souhaitez-vous effacer cette consommation?"))
                 {
-                //alert(data);
-                $('#add-conso').val("Add");
-                table_conso.ajax.reload();
+                $.ajax({
+                    url:"../backend/consommation.php"+ "?op=delete",
+                    method:"POST",
+                    data:{id_conso:id_conso},
+                    success:function(data)
+                    {
+                    //alert(data);
+                    table_conso.ajax.reload();
+                    }
+                });
                 }
-            });
-            }
-            else
-            {
-            return false; 
-            }
+                else
+                {
+                return false; 
+                }
             });
         });
     </script> 
