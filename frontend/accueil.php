@@ -65,41 +65,6 @@
                             </div>
                         </div>
 
-
-                        <!-- Progress Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Nutriments</h6>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <h4 class="small font-weight-bold">Server Migration <span
-                                            class="float-right">20%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Sales Tracking <span
-                                            class="float-right">40%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Customer Database <span
-                                            class="float-right">60%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar" role="progressbar" style="width: 60%"
-                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                                <a href="nouveau.php" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Ajouter un nouveau repas</a>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Page Heading -->
@@ -176,23 +141,23 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Nutriments</h6>
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">
-                                    <h4 class="small font-weight-bold">Server Migration <span
-                                            class="float-right">20%</span></h4>
+                                <div class="card-body-nutri">
+                                    <h4 class="small font-weight-bold hprot">Protéines <span
+                                            class="float-right proteines-span">20%</span></h4>
                                     <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
+                                        <div class="progress-bar bg-danger proteines-bar" role="progressbar" style="width: 20%"
                                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <h4 class="small font-weight-bold">Sales Tracking <span
-                                            class="float-right">40%</span></h4>
+                                    <h4 class="small font-weight-bold hglu">Glucides <span
+                                            class="float-right glucides-span">40%</span></h4>
                                     <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                        <div class="progress-bar  bg-warning glucides-bar"  role="progressbar" style="width: 40%"
                                             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <h4 class="small font-weight-bold">Customer Database <span
-                                            class="float-right">60%</span></h4>
+                                    <h4 class="small font-weight-bold hlip">Lipides <span
+                                            class="float-right lipides-span">60%</span></h4>
                                     <div class="progress mb-4">
-                                        <div class="progress-bar" role="progressbar" style="width: 60%"
+                                        <div class="progress-bar lipides-bar" role="progressbar" style="width: 60%"
                                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
@@ -286,3 +251,89 @@
 
                 </div>
                 <!-- /.container-fluid -->
+                <script>
+                    var glucideProgress = 50;
+                    $('.hglu').children(".glucides-span").text(10+'%');
+                    // $('').children(".glucides-bar").attr('aria-valuenow', 10).css('width', 10+'%');
+                    alert($('.hglu').children('.glucides-span').text());
+                    $(document).ready(function() {
+                        var _data = 50;
+                        
+                        event.preventDefault();
+                        var btn  = '.card-body-nutri';
+                        console.log($('.small font-weight-bold').children()[0]);
+                        set_glu_prog();
+                        set_lip_prog();
+                        set_prot_prog();
+                    });
+
+                    function set_glu_prog(){
+                        $.ajax({
+                            url:"../backend/statistiques.php" + "?type_stat=glucides_pct" ,
+                            method:'GET',
+                            data:"",
+                            dataType: 'json',
+                            success:function(data)
+                            {
+                                // var gl = data["0"]["glucides"];
+                                // alert(gl);
+                                var total_qte_glu = 0 ;
+                                var total_rec_glu = 0;
+                                data.forEach(item => {
+                                    total_qte_glu  += parseFloat(item["Quantite(g)"]);
+                                    total_rec_glu += parseFloat(item["Qte Rec"]);
+                                })
+                                var pct = (100 * total_qte_glu) / total_rec_glu ;
+                                pct =pct>100?100:pct;
+                                $(".glucides-span").text(pct+'%');
+                                $(".glucides-bar").attr('aria-valuenow', pct).css('width', pct+'%');
+                            }
+                        });
+                    }
+                    function set_lip_prog(){
+                        $.ajax({
+                            url:"../backend/statistiques.php" + "?type_stat=lipides_pct" ,
+                            method:'GET',
+                            data:"",
+                            dataType: 'json',
+                            success:function(data)
+                            {
+                                // var gl = data["0"]["glucides"];
+                                // alert(gl);
+                                var total_qte = 0 ;
+                                var total_rec = 0;
+                                data.forEach(item => {
+                                    total_qte  += parseFloat(item["Quantite(g)"]);
+                                    total_rec += parseFloat(item["Qte Rec"]);
+                                })
+                                var pct = (100 * total_qte) / total_rec ;
+                                pct = pct>100?100:pct;
+                                $(".lipides-span").text(pct+'%');
+                                $(".lipides-bar").attr('aria-valuenow', pct).css('width', pct+'%');
+                            }
+                        });
+                    }
+                    function set_prot_prog(){
+                        $.ajax({
+                            url:"../backend/statistiques.php" + "?type_stat=proteines_pct" ,
+                            method:'GET',
+                            data:"",
+                            dataType: 'json',
+                            success:function(data)
+                            {
+                                // var gl = data["0"]["glucides"];
+                                // alert(gl);
+                                var total_qte = 0 ;
+                                var total_rec = 0;
+                                data.forEach(item => {
+                                    total_qte  += parseFloat(item["Quantite(g)"]);
+                                    total_rec += parseFloat(item["Qte Rec"]);
+                                })
+                                var pct = (100 * total_qte) / total_rec ;
+                                pct = pct>100?100:pct;
+                                $(".proteines-span").text(pct+'%');
+                                $(".proteines-bar").attr('aria-valuenow', pct).css('width', pct+'%');
+                            }
+                        });
+                    }
+                </script>

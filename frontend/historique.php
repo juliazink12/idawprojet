@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <!-- Import jquery before bootstrap-typehead -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    
     <!-- <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script> -->
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <!-- Import Datatables after JQuery-->
@@ -148,6 +149,7 @@
         var _formMode = 'add';
         var _idConso = 0;
         $(document).ready(function() {
+
             event.preventDefault();
             $(document).on('click', '#add-button', function(){
                 event.preventDefault();
@@ -185,8 +187,8 @@
             // Refilter the table
             // $('#min, #max').on('change', function () {
             //     table_conso.draw();
-            // });    
-        
+            // }); 
+
             $(document).on('submit', '#conso_form', function(event){
             event.preventDefault();
             var Nom = $('#nom').val();
