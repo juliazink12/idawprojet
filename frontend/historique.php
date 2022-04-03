@@ -7,9 +7,11 @@
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <!-- Import jquery before bootstrap-typehead -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script> -->
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <!-- Import Datatables after JQuery-->
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.js"></script> -->
@@ -26,7 +28,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/searchpanes/2.0.0/js/dataTables.searchPanes.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
-    <!-- <script src="js/dataTables.altEditor.free.js"> -->
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
         
     
@@ -67,8 +68,8 @@
     </div>
         <div class="row">  
             <div class="col-md-12 text-left">   
-                <div> Sélectionnez un type</div>     
-                <input class="typeahead form-control" style="width:300px;" type="text">  
+                <div> Sélectionnez un aliment</div>     
+                <input class="aliment-ac form-control" style="width:300px;" type="text">  
             </div>  
         </div>  
     </table>
@@ -80,7 +81,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+                        <span aria-hidden="true"></span>
                     </button>
                 </div>
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
@@ -92,63 +93,66 @@
         </div>
     </div>
     <!-- Consommation Modal-->
-    <div class="modal fade" id="consoModal">
-    <div class="modal-dialog">
+    <div class="modal fade ui_front" id="consoModal">
+    <div class="modal-dialog ui_front">
     <form method="post" id="conso_form" enctype="multipart/form-data">
-    <div class="modal-content">
+    <div class="modal-content ui-front ui_front">
         <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Ajouter une consommation</h4>
         </div>
         <div class="modal-body">
         <label>Nom de la consommation</label>
-        <input type="text" name="nom" id="nom" class="form-control" />
+        <input type="text" name="nom" id="modal-nom" class="form-control aliment-ac" />
         <br />
         <label>Date</label>
-        <input type="date" name="date" id="date" class="form-control" />
+        <input type="date" name="date" id="modal-date" class="form-control" />
         <br />
         <label>Quantité</label>
-        <input type="text" name="quantite" id="quantite" class="form-control" />
+        <input type="text" name="quantite" id="modal-quantite" class="form-control" />
         <br />
         </div>
         <div class="modal-footer">
         <input type="submit" name="action" id="add-conso" class="btn btn-success" value="Add" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+        <div id="modal-query-result"></div>
         </div>
+        
     </div>
     </form>
     </div>
     </div>
     <script type="text/javascript" language="javascript">
-        var minDate, maxDate;
-    
-        // Custom filtering function which will search data in column four between two values
-        $.fn.dataTable.ext.search.push(
-            function( settings, data, dataIndex ) {
-                var min = minDate.val();
-                var max = maxDate.val();
-                var date = new Date( data[1] );
+        // var minDate, maxDate;
+        
+        // // Custom filtering function which will search data in column four between two values
+        // $.fn.dataTable.ext.search.push(
+        //     function( settings, data, dataIndex ) {
+        //         var min = minDate.val();
+        //         var max = maxDate.val();
+        //         var date = new Date( data[1] );
                 
         
-                if (
-                    ( min === null && max === null ) ||
-                    ( min === null && date <= max ) ||
-                    ( min <= date   && max === null ) ||
-                    ( min <= date   && date <= max )
-                ) {
-                    return true;
-                }
-                return false;
-            }
-        );
+        //         if (
+        //             ( min === null && max === null ) ||
+        //             ( min === null && date <= max ) ||
+        //             ( min <= date   && max === null ) ||
+        //             ( min <= date   && date <= max )
+        //         ) {
+        //             return true;
+        //         }
+        //         return false;
+        //     }
+        // );
         var _span = 'all';
-
+        var _formMode = 'add';
+        var _idConso = 0;
         $(document).ready(function() {
+
             $("#add_button").click(function(){
                 $('#conso_form')[0].reset();
                 $('.modal-title').text("Ajouter une Consommation");
-                $('#action').val("Add");
-                $('#operation').val("Add");
+                $('#add-conso').val("Add");
             });
 
             var table_conso = $('#table-conso').DataTable( {
@@ -177,61 +181,91 @@
                 ]
             });
             // Refilter the table
-            $('#min, #max').on('change', function () {
-                table_conso.draw();
-            });    
+            // $('#min, #max').on('change', function () {
+            //     table_conso.draw();
+            // });    
         
             $(document).on('submit', '#conso_form', function(event){
             event.preventDefault();
             var Nom = $('#nom').val();
             var Date = $('#date').val();
             var Quantite = $('#quantite').val();
-            if(Nom != '' && Date != '' && Quantite != '')
-            {
-            $.ajax({
-                url:"../backend/consommation.php" + "?op=add",
-                method:'POST',
-                data:new FormData(this),
-                contentType:false,
-                processData:false,
-                success:function(data)
-                {
-                alert(data);
-                $('#conso_form')[0].reset();
-                $('#consoModal').modal('hide');
-                table_conso.ajax.reload();
+            var mode = "add";
+            if(Nom != '' && Date != '' && Quantite != ''){
+                var ac_val = $('#add-conso').val();
+                if(ac_val ="Update"){
+                    $.ajax({
+                        url:"../backend/consommation.php" + "?op=update" + "&id_conso=" + _idConso,
+                        method:'POST',
+                        data:new FormData(this),
+                        contentType:false,
+                        processData:false,
+                        success:function(data)
+                        {
+                        alert(data);
+                        $('#conso_form')[0].reset();
+                        $('#consoModal').modal('hide');
+                        table_conso.ajax.reload();
+                        }
+                    });
                 }
-            });
+                else{
+                    $.ajax({
+                        url:"../backend/consommation.php" + "?op=add",
+                        method:'POST',
+                        data:formData,
+                        contentType:false,
+                        processData:false,
+                        success:function(data)
+                        {
+                        alert(data);
+                        $('#conso_form')[0].reset();
+                        $('#consoModal').modal('hide');
+                        table_conso.ajax.reload();
+                        }
+                    }); 
+                }
             }
             else
             {
             alert("Les trois champs sont requis.");
             }
             });
-            
-            $(document).on('click', '.btn-edit', function(){
-            var data = table_conso.row( $(this).parents('tr') ).data();
-            var id_conso = data["id_conso"];
-            $.ajax({
-                url:"../backend/consommation.php"+"?op=edit",
-                method:"POST",
-                data:{id_conso:id_conso},
-                dataType:"json",
-                success:function(data)
-                {
-                    $('#consoModal').modal('show');
-                    $('#nom').val(data["nom"]);
-                    $('#date').val(data["date"]);
-                    $('#quantite').val(data["quantite"]);
-                    $('.modal-title').text("Editer la Consommation");
-                    $('#id_conso').val(id_conso);
-                    $('#action').val("Edit");
-                    $('#operation').val("Edit");
+
+            $( ".aliment-ac" ).autocomplete({
+            source: function( request, response ) {
+                $.ajax( {
+                url: "../backend/aliments.php",
+                dataType: "json",
+                appendTo: "#modal-query-result",
+                data: {
+                    "q":  request.term
+                },
+                success: function( data ) {
+                    response( data );
                 }
-                })
-            });
+                } )
+            },
+            minLength: 2,
+            select: function( event, ui ) {
+                // alert( "Selected: " + ui.item.value + " aka " + ui.item.id );
+            }
+            } );
+            $(document).on('click', '.btn-edit', function(){
+                var data1 = table_conso.row( $(this).parents('tr') ).data();
+                _idConso = data1["id_conso"];
+                alert(Date(data1["date"]));
+                $('#consoModal').modal('show');
+                $('#modal-nom').val(data1["nom"]);
+                $('#modal-date').val(data1["date"]);
+                $('#modal-quantite').val(data1["quantite"]);
+                $('.modal-title').text("Editer la Consommation");
+                $('#operation').val("Edit");
+                $('#add-conso').val("Update");
+                _formMode = "edit";
+                });
             $(document).on('click', '.btn-delete', function(){
-            var id_conso = table_conso.row( $(this).parents('tr') ).data()["id_conso"];
+            id_conso = table_conso.row( $(this).parents('tr') ).data()["id_conso"];
             if(confirm("Souhaitez-vous effacer cette consommation?"))
             {
             $.ajax({

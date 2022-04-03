@@ -45,16 +45,16 @@ function get_conso($conn){
 function add_conso($conn){
     $quantite = $_POST["quantite"];
     $date = $_POST["date"];
-    $login = $_POST["login"];
-    $id_ali = $_POST["id_ali"];
-    $stmt = $conn->prepare("INSERT INTO  consommation (quantite,date) VALUES (:quantite,:date)");
-    $stmt->bindValue(':quantite', $type, PDO::PARAM_FLOAT);
-    $stmt->bindValue(':date', $type, PDO::PARAM_STR);
+    // $login = $_POST["login"];
+    $nom = $_POST["nom"];
+    $stmt = $conn->prepare("SELECT id_ali INTO @id1 FROM aliment WHERE aliment.nom = :nom LIMIT 1;INSERT INTO  consommation (id_ali,quantite,date) VALUES (@id1,:quantite,:date)");
+    $stmt->bindValue(':quantite', $quantite, PDO::PARAM_STR);
+    $stmt->bindValue(':date', $date, PDO::PARAM_STR);
     // $stmt->bindValue(':login', $type, PDO::PARAM_STR);
-    $stmt->bindValue(':id_ali', $type, PDO::PARAM_INT);
+    $stmt->bindValue(':nom', $nom, PDO::PARAM_INT);
     $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
+    // $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $stmt;
 }
 function delete_conso($conn){
     if(isset($_POST["id_conso"])){
@@ -68,16 +68,22 @@ function delete_conso($conn){
     }
 }
 function update_conso($conn){
+    
     $quantite = $_POST["quantite"];
     $date = $_POST["date"];
-    $login = $_POST["login"];
-    $id_ali = $_POST["nom"];
-    $stmt = $conn->prepare("UPDATE consommation set quantite=:quantite,date=:date,login=:login,id_ali=(SELECT consommation.id_ali WHERE consommation.nom=:nom)");
-    $stmt->bindValue(':quantite', $quantite, PDO::PARAM_FLOAT);
-    $stmt->bindValue(':date', $date, PDO::PARAM_STR);
-    $stmt->bindValue(':login', $login, PDO::PARAM_STR);
-    $stmt->bindValue(':nom', $id_ali, PDO::PARAM_STR);
-    $stmt->execute();
+    // $login = $_POST["login"];
+    $nom = $_POST["nom"];
+    $stmt = $conn->prepare("SELECT id_ali INTO @id1 FROM aliment WHERE aliment.nom = :nom LIMIT 1;UPDATE consommation set quantite=:quantite,date=:date,id_ali=@id1
+    WHERE consommation.id_conso=:id_conso");
+    if(isset($_GET["id_conso"])){
+        $id_conso = $_GET["id_conso"];
+        $stmt->bindValue(':quantite', $quantite, PDO::PARAM_STR);
+        $stmt->bindValue(':date', $date, PDO::PARAM_STR);
+        // $stmt->bindValue(':login', $login, PDO::PARAM_STR);
+        $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
+        $stmt->bindValue(':id_conso', $id_conso, PDO::PARAM_INT);
+        $stmt->execute();
+    }
     // $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $stmt;
 }

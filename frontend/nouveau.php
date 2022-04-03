@@ -27,7 +27,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/searchpanes/2.0.0/js/dataTables.searchPanes.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
     <!-- Import altEditorFree before momentjs and after Datatable-->
-    <script src="js/dataTables.altEditor.free.js"></script> 
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>      
 </head>
 <body>   
@@ -36,23 +35,22 @@
             <div> Sélectionnez un repas</div>     
             <input id="inputTypeahead"class="typeahead form-control" style="width:300px;" type="text">  
         </div>  
-    </div>  
+    </div> 
+    <input class="form-control basicAutoComplete" type="text" autocomplete="off">
 </body>
 </html>
 <script>
-    $('#inputTypeahead').typeahead({  
-        source:  function (query, process) {  
-        return $.get('../backend/aliments.php', { type: query }, function (data) {  
-                console.log(data);  
-                data = $.parseJSON(data);  
-                return process(data);  
-            }); 
-        }, 
-        updater: function(item) {
-        // updater is run after user click
-            console.log(item);
-        } 
+$(document).ready(function() {
+    $("button").click(function(event){
+        alert();
+        $(this).off("click");
     });
+    $('.basicAutoComplete').autoComplete({
+        resolverSettings: {
+            url: 'backend/aliments.php'
+        }
+    });
+});
 </script>
 <?php require_once('template_footer.php');
 ?>
