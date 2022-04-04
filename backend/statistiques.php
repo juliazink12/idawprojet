@@ -96,22 +96,31 @@ function get_raw_values($conn){
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $result;
 }
-function get_glucides_distribution($conn){
+function get_distribution($conn){
+    $sql = "SELECT SUM(consommation.quantite*composition.ratio) as nutriments FROM consommation JOIN composition USING (id_ali) WHERE composition.id_ali = consommation.id_ali AND (consommation.date BETWEEN date_sub(now(),INTERVAL 1 WEEK) AND now())
+GROUP BY composition.id_nutri;";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
+}
+
+function get_glucides_raw($conn){
     $sql = "SELECT SUM(consommation.quantite*composition.ratio) as glucides FROM consommation JOIN composition USING (id_ali) WHERE composition.id_ali = consommation.id_ali AND composition.id_nutri = 1 AND (consommation.date BETWEEN date_sub(now(),INTERVAL 1 WEEK) AND now());";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $result;
 }
-function get_proteines_distribution($conn){
+function get_proteines_raw($conn){
     $sql = "SELECT SUM(consommation.quantite*composition.ratio) as proteines FROM consommation JOIN composition USING (id_ali) WHERE composition.id_ali = consommation.id_ali AND composition.id_nutri = 2 AND (consommation.date BETWEEN date_sub(now(),INTERVAL 1 WEEK) AND now());";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return $result;
 }
-function get_lipides_distribution($conn){
-    $sql = "SELECT SUM(consommation.quantite*composition.ratio) as glucides FROM consommation JOIN composition USING (id_ali) WHERE composition.id_ali = consommation.id_ali AND composition.id_nutri = 3 AND (consommation.date BETWEEN date_sub(now(),INTERVAL 1 WEEK) AND now());";
+function get_lipides_raw($conn){
+    $sql = "SELECT SUM(consommation.quantite*composition.ratio) as lipides FROM consommation JOIN composition USING (id_ali) WHERE composition.id_ali = consommation.id_ali AND composition.id_nutri = 3 AND (consommation.date BETWEEN date_sub(now(),INTERVAL 1 WEEK) AND now());";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -128,21 +137,18 @@ if(isset($_GET["type_stat"])){
         case 'proteines_pct':
             $result = get_proteines($conn);
             break;
-        case 'percentages':
-            $result = get_percentages($conn);
-            break;
-        case 'raw_values':
-            $result = get_raw_values($conn);
-            break;
-        case 'glu_distrib':
-            $result = get_glucides_distribution($conn);
-            break;   
-        case 'lip_distrib':
-            $result = get_lipides_distribution($conn);
+        case 'distrib':
+            $result = get_distribution($conn);
+            break;     
+        case 'glu_raw':
+            $result = get_glucides_raw($conn);
             break;  
-        case 'prot_distrib':
-            $result = get_proteines_distribution($conn);
-            break;   
+        case 'prot_raw':
+            $result = get_proteines_raw($conn);
+            break;  
+        case 'lip_raw':
+            $result = get_lipides_raw($conn);
+            break;  
     }
 }
 exit(json_encode($result));

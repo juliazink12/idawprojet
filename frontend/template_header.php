@@ -25,6 +25,7 @@
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body id="page-top">
@@ -57,11 +58,11 @@
             <hr class="sidebar-divider">
 
             <!-- Nav Item - Nouveau repas -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="nouveau.php">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Nouveau repas</span></a>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Historique -->
             <li class="nav-item">
