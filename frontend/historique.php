@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <!-- Import jquery before bootstrap-typehead -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    
-    <!-- <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script> -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <!-- Import Datatables after JQuery-->
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.5/b-2.2.2/date-1.1.2/r-2.2.9/sl-1.3.4/datatables.min.css"/>
@@ -67,12 +67,12 @@
             </div>
         </div>
     </div>
-        <div class="row">  
+        <!-- <div class="row">  
             <div class="col-md-12 text-left">   
                 <div> Sélectionnez un aliment</div>     
                 <input class="aliment-ac form-control" style="width:300px;" type="text">  
             </div>  
-        </div>  
+        </div>   -->
     </table>
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -153,7 +153,6 @@
             event.preventDefault();
             $(document).on('click', '#add-button', function(){
                 event.preventDefault();
-                alert("Clicked");
                 $('#conso_form')[0].reset();
                 $('.modal-title').text("Ajouter une Consommation");
                 _formMode = "add";
@@ -258,7 +257,7 @@
                 event.preventDefault();
                 var data1 = table_conso.row( $(this).parents('tr') ).data();
                 _idConso = data1["id_conso"];
-                alert(Date(data1["date"]));
+                // alert(Date(data1["date"]));
                 $('#consoModal').modal('show');
                 $('#modal-nom').val(data1["nom"]);
                 $('#modal-date').val(data1["date"]);

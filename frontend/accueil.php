@@ -3,7 +3,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Aujourd'hui</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Journal(semaine)</h1>
                     </div>
 
                     <!-- Content Row -->
@@ -229,7 +229,6 @@
                                 glu_dist = Math.round((glu/sum)*100)/100;
                                 prot_dist = Math.round((prot/sum)*100)/100;
                                 lip_dist = Math.round((lip/sum)*100)/100;
-                                alert(lip_dist);
                                 nutriPieChart.data.datasets[0].data = [glu_dist,prot_dist,lip_dist];
                                 nutriPieChart.update();
                             }
